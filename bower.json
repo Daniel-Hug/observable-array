@@ -1,0 +1,21 @@
+{
+  "name": "observable-array",
+  "main": "observable-array.js",
+  "homepage": "https://github.com/Daniel-Hug/observable-array",
+  "authors": [
+    "Daniel Hug <daniel@hugwebdesign.com>"
+  ],
+  "description": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "subscribable.js": "~2.1.0"
+  }
+}

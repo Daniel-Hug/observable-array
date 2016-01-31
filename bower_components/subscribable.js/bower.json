@@ -1,0 +1,29 @@
+{
+  "name": "subscribable.js",
+  "main": "subscribable.js",
+  "version": "2.1.0",
+  "authors": [
+    "Daniel Hug <danielthehug@gmail.com>"
+  ],
+  "description": "custom event listening in JS",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "custom events",
+    "event",
+    "listen",
+    "subscribe"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/Daniel-Hug/subscribable.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
