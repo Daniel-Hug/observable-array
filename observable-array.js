@@ -1,8 +1,12 @@
 var ObservableArray = (function() {
 
+
+
+
 	/*
 		constructor
 	*/
+
 	function ObservableArray(collection) {
 		// add items from passed `collection` to `this`
 		collection = collection || [];
@@ -12,21 +16,21 @@ var ObservableArray = (function() {
 
 		// set length so it acts like an array: http://stackoverflow.com/a/6599447/552067
 		this.length = collection.length;
-		
+
 		// keep list of observing functions
 		this.observers = {};
 	}
 
 
 
+
 	/*
-		cloned methods (from Array.prototype)
+		methods from Array.prototype that modify `this`
 	*/
 
-	// methods of Array.prototype that modify `this`
 	var modifyingMethods = 'pop push shift unshift splice reverse sort'.split(' ');
 
-	// add clones of the above native array methods to ObservableArray.prototype
+	// add *clones* of the above native array methods to ObservableArray.prototype
 	// the clones should notify observers after completion
 	var arrProto = Array.prototype;
 	modifyingMethods.forEach(function(methodName) {
@@ -39,17 +43,20 @@ var ObservableArray = (function() {
 		};
 	});
 
-	// methods of Array.prototype that don't modify `this`
+
+
+
+	/*
+		methods from Array.prototype that don't modify `this`
+	*/
+
 	var returningMethods = 'slice concat join some every forEach map filter reduce reduceRight indexOf lastIndexOf toString toLocaleString'.split(' ');
 
-	// add clones of the above native array methods to ObservableArray.prototype
-	// the clones should notify observers after completion
+	// add the above native array methods to ObservableArray.prototype
 	returningMethods.forEach(function(methodName) {
-		var method = arrProto[methodName];
-		ObservableArray.prototype[methodName] = function() {
-			return method.apply(this, arguments);
-		};
+		ObservableArray.prototype[methodName] = arrProto[methodName];
 	});
+
 
 
 
@@ -92,6 +99,8 @@ var ObservableArray = (function() {
 		(this.observers[methodName] || []).forEach(caller);
 		if (methodName !== 'change') (this.observers.change || []).forEach(caller);
 	};
+
+
 
 
 	return ObservableArray;
