@@ -8,6 +8,11 @@ var ObservableArray = (function() {
 	*/
 
 	function ObservableArray(collection) {
+		// calling with `new` is optional
+		if (!(this instanceof ObservableArray)) {
+			return new ObservableArray(collection);
+		}
+
 		// add items from passed `collection` to `this`
 		collection = collection || [];
 		for (var i = 0; i < collection.length; i++) {
