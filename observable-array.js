@@ -2,7 +2,6 @@ var ObservableArray = (function() {
 
 
 
-
 	/*
 		constructor
 	*/
@@ -17,10 +16,17 @@ var ObservableArray = (function() {
 		// set length so it acts like an array: http://stackoverflow.com/a/6599447/552067
 		this.length = collection.length;
 
-		// keep list of observing functions
-		this.observers = {};
+		// keep list of observing functions for subscribable.js
+    	this.subscribers = {};
 	}
 
+
+
+	/*
+		make changes observable via subscribable.js
+	*/
+
+	ObservableArray.prototype = new Subscribable();
 
 
 
@@ -38,11 +44,10 @@ var ObservableArray = (function() {
 		ObservableArray.prototype[methodName] = function() {
 			var returnValue = method.apply(this, arguments);
 			var args = [methodName].concat(arrProto.slice.call(arguments));
-			this.notify.apply(this, args);
+			this.trigger.apply(this, args);
 			return returnValue;
 		};
 	});
-
 
 
 
@@ -56,50 +61,6 @@ var ObservableArray = (function() {
 	returningMethods.forEach(function(methodName) {
 		ObservableArray.prototype[methodName] = arrProto[methodName];
 	});
-
-
-
-
-	/*
-		custom methods
-	*/
-
-	// add an observer
-	ObservableArray.prototype.on = function on(methodName, handler) {
-		if (!this.observers[methodName]) this.observers[methodName] = [];
-		this.observers[methodName].push(handler);
-	};
-
-	// remove observers
-	ObservableArray.prototype.off = function off(methodName, handler) {
-		if (methodName) {
-			if (handler) {
-				// unsubscribe an observer from a method
-				var fnIndex = this.observers[methodName].indexOf(handler);
-				if (fnIndex >= 0) this.observers[methodName].splice(fnIndex, 1);
-			} else {
-				// unsubscribe all observers of a method
-				this.observers[methodName] = [];
-			}
-		} else {
-			// remove all observers from array
-			for (methodName in this.observers) {
-				this.observers[methodName] = [];
-			}
-		}
-	};
-
-	// notify observers
-	ObservableArray.prototype.notify = function notify(methodName) {
-		var args = arguments;
-		var context = this;
-		function caller(handler) {
-			handler.apply(context, args);
-		}
-		(this.observers[methodName] || []).forEach(caller);
-		if (methodName !== 'change') (this.observers.change || []).forEach(caller);
-	};
-
 
 
 
