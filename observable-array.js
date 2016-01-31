@@ -1,4 +1,5 @@
 var ObservableArray = (function() {
+	var arrProto = Array.prototype;
 
 
 
@@ -17,7 +18,7 @@ var ObservableArray = (function() {
 		this.length = collection.length;
 
 		// keep list of observing functions for subscribable.js
-    	this.subscribers = {};
+		this.subscribers = {};
 	}
 
 
@@ -38,7 +39,6 @@ var ObservableArray = (function() {
 
 	// add *clones* of the above native array methods to ObservableArray.prototype
 	// the clones should notify observers after completion
-	var arrProto = Array.prototype;
 	modifyingMethods.forEach(function(methodName) {
 		var method = arrProto[methodName];
 		ObservableArray.prototype[methodName] = function() {
