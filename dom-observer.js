@@ -3,7 +3,8 @@
 
 	// setup:
 	var observableArray = new ObservableArray([1,2,3,4,5,6,7]);
-	observableArray.addDomObserver(document.querySelector('ul'), function(num) {
+	var ul = document.querySelector('ul');
+	var observer = observableArray.addDomObserver(ul, function(num) {
 		var li = document.createElement('li');
 		li.textContent = 'number: ' + num;
 		return li;
@@ -12,6 +13,9 @@
 	// changes are reflected in DOM:
 	observableArray.push(8);
 	observableArray.splice(2);
+
+	// unsubscribe DOM observer:
+	observer.stop();
 */
 
 ObservableArray.prototype.addDomObserver = (function() {
