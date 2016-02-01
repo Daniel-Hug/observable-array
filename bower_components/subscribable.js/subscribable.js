@@ -22,6 +22,7 @@
 				this.subscribers[event].push(fn);
 			}, this);
 			if (callNow) fn.call(this);
+			return this;
 		},
 
 		// Pass a space-separated list of events and a function to unsubscribe a specific
@@ -42,6 +43,7 @@
 					this.subscribers[event] = [];
 				}
 			}
+			return this;
 		},
 
 		// Notify all the subscribers of an event
@@ -53,6 +55,7 @@
 			}
 			(this.subscribers[event] || []).forEach(caller);
 			if (event !== 'any') (this.subscribers.any || []).forEach(caller);
+			return this;
 		}
 	};
 

@@ -16,6 +16,6 @@
     "tests"
   ],
   "dependencies": {
-    "subscribable.js": "~2.1.0"
+    "subscribable.js": "2.x"
   }
 }
