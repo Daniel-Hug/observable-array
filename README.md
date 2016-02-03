@@ -54,8 +54,8 @@ function itemRenderer(num) {
 }
 
 // add DOM observer:
-var observer = observableArray.addDomObserver(ul, itemRenderer);
+var domObserver = observableArray.addDomObserver(ul, itemRenderer);
 
 // unsubscribe DOM observer:
-observer.stop();
+domObserver.stop();
 ```

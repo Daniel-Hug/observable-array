@@ -42,12 +42,21 @@ ObservableArray.prototype.addDomObserver = (function() {
 		// render current state
 		parent.appendChild(renderAll(observableArray, renderer));
 
-		// render and append new items when they're pushed
-		function handlePush() {
+		function handleAdd(methodName) {
 			var newItems = [].slice.call(arguments, 1);
-			parent.appendChild(renderAll(newItems, renderer));
+			var appendable = renderAll(newItems, renderer);
+			if (methodName === 'push') {
+				parent.appendChild(appendable);
+			} else {
+				parent.insertBefore(appendable, parent.firstChild);
+			}
 		}
-		observableArray.on('push', handlePush);
+		observableArray.on('unshift push', handleAdd);
+
+		function handleRemove(methodName) {
+			parent.removeChild(parent[methodName === 'pop' ? 'lastChild' : 'firstChild']);
+		}
+		observableArray.on('shift pop', handleAdd);
 
 		// render DOM changes to match the call to splice
 		function handleSplice(methodName, start, deleteCount) {
@@ -72,11 +81,25 @@ ObservableArray.prototype.addDomObserver = (function() {
 		}
 		observableArray.on('splice', handleSplice);
 
+		function handleReverse() {
+			if (parent.childNodes.length > 1) {
+				var docFrag = document.createDocumentFragment();
+				while (parent.lastChild) {
+					var last = parent.removeChild(parent.lastChild);
+					docFrag.appendChild(last);
+				}
+				parent.appendChild(docFrag);
+			}
+		}
+		observableArray.on('reverse', handleReverse);
+
 		return {
 			stop: function() {
 				observableArray
-					.off('push', handlePush)
-					.off('splice', handleSplice);
+					.off('unshift push', handleAdd)
+					.off('shift pop', handleRemove)
+					.off('splice', handleSplice)
+					.off('reverse', handleReverse);
 			}
 		}
 	};

@@ -33,7 +33,7 @@ nums.push(8, 9);
 
 <h3>Add a DOM observer which will get live updates</h3>
 <script style="display: block; white-space: pre;">var ul = document.querySelector('ul');
-var observer = nums.addDomObserver(ul, function(num) {
+var domObserver = nums.addDomObserver(ul, function(num) {
 	var li = document.createElement('li');
 	li.textContent = 'number: ' + num;
 	return li;
