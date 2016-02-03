@@ -34,8 +34,11 @@ ObservableArray.prototype.addDomObserver = (function() {
 	function spliceNodes(parent, start, deleteCount /*[, newNode1, newNode2]*/) {
 		var childNodes = parent.childNodes;
 
+		// If negative, will begin that many elements from the end
+		start = start < 0 ? childNodes.length + start : start
+
 		// remove the element at index `start` `deleteCount` times
-		var stop = typeof deleteCount === 'number' ? start + deleteCount : parent.childElementCount;
+		var stop = typeof deleteCount === 'number' ? start + deleteCount : childNodes.length;
 		for (var i = start; i < stop && childNodes[start]; i++) {
 			parent.removeChild(childNodes[start]);
 		}
