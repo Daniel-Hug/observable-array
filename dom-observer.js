@@ -21,33 +21,18 @@
 ObservableArray.prototype.addDomObserver = (function() {
 
 	// renderer will be called for each item in arr, and should return a DOM node.
-	// all DOM nodes returned will be appended to a document fragment which will be returned
-	function renderMultiple(arr, renderer) {
-		var docFrag = document.createDocumentFragment();
-		[].map.call(arr, renderer).forEach(function(el) {
-			docFrag.appendChild(el);
-		});
-		return docFrag;
-	}
+	// renderAll returns a single node containing the rendered nodes
+	function renderAll(arr, renderer) {
+		var elements = [].map.call(arr, renderer);
 
-	// acts like Array##splice for parent's childNodes
-	function spliceNodes(parent, start, deleteCount /*[, newNode1, newNode2]*/) {
-		var childNodes = parent.childNodes;
-
-		// If negative, will begin that many elements from the end
-		start = start < 0 ? childNodes.length + start : start
-
-		// remove the element at index `start` `deleteCount` times
-		var stop = typeof deleteCount === 'number' ? start + deleteCount : childNodes.length;
-		for (var i = start; i < stop && childNodes[start]; i++) {
-			parent.removeChild(childNodes[start]);
-		}
-
-		// add new elements at index `start`
-		if (arguments.length > 3) {
-			var newCells = [].slice.call(arguments, 3);
-			var docFrag = renderMultiple(newCells, renderCell);
-			parent.insertBefore(docFrag, childNodes[start]);
+		if (elements.length > 1) {
+			var docFrag = document.createDocumentFragment();
+			elements.forEach(function(el) {
+				docFrag.appendChild(el);
+			});
+			return docFrag;
+		} else {
+			return elements[0];
 		}
 	}
 
@@ -55,19 +40,35 @@ ObservableArray.prototype.addDomObserver = (function() {
 		var observableArray = this;
 
 		// render current state
-		parent.appendChild(renderMultiple(observableArray, renderCell));
+		parent.appendChild(renderAll(observableArray, renderer));
 
 		// render and append new items when they're pushed
 		function handlePush() {
-			var newCells = [].slice.call(arguments, 1);
-			parent.appendChild(renderMultiple(newCells, renderCell));
+			var newItems = [].slice.call(arguments, 1);
+			parent.appendChild(renderAll(newItems, renderer));
 		}
 		observableArray.on('push', handlePush);
 
 		// render DOM changes to match the call to splice
-		function handleSplice() {
-			var spliceArgs = [].slice.call(arguments, 1)
-			spliceNodes.apply(null, [parent].concat(spliceArgs))
+		function handleSplice(methodName, start, deleteCount) {
+			var childNodes = parent.childNodes;
+
+			// If negative, begin that many elements from the end
+			start = start < 0 ? childNodes.length + start : start
+
+			// remove the element at index `start` `deleteCount` times
+			deleteCount = typeof deleteCount === 'number' ? deleteCount : childNodes.length - start;
+			var stop = start + deleteCount;
+			for (var i = start; i < stop && childNodes[start]; i++) {
+				parent.removeChild(childNodes[start]);
+			}
+
+			// add new elements at index `start`
+			if (arguments.length > 3) {
+				var newItems = [].slice.call(arguments, 3);
+				var appendable = renderAll(newItems, renderer);
+				parent.insertBefore(appendable, childNodes[start]);
+			}
 		}
 		observableArray.on('splice', handleSplice);
 
