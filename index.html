@@ -15,7 +15,9 @@
 <script src="dom-observer.js"></script>
 
 <h3>Create an observable array</h3>
-<script style="display: block; white-space: pre;">var nums = new ObservableArray([1,2,3,4,5,6,7,8,9,10,11]);</script>
+<script style="display: block; white-space: pre;">var nums = new ObservableArray([1,2,3,4,5,6,7,8,9,10,11].map(function(num){
+	return { num: num };
+}));</script>
 
 <h3>Get notified when it changes</h3>
 <script style="display: block; white-space: pre;">nums.on('push', function() {
@@ -27,15 +29,15 @@
 nums.splice(-4);
 
 // add 2
-nums.push(8, 9);
+nums.push({num: 8}, {num: 9});
 
 // try this in the console!</script>
 
 <h3>Add a DOM observer which will get live updates</h3>
 <script style="display: block; white-space: pre;">var ul = document.querySelector('ul');
-var domObserver = nums.addDomObserver(ul, function(num) {
+var domObserver = nums.addDomObserver(ul, function(obj) {
 	var li = document.createElement('li');
-	li.textContent = 'number: ' + num;
+	li.textContent = 'number: ' + obj.num;
 	return li;
 });</script>
 

@@ -23,7 +23,9 @@ ObservableArray.prototype.addDomObserver = (function() {
 	// renderer will be called for each item in arr, and should return a DOM node.
 	// renderAll returns a single node containing the rendered nodes
 	function renderAll(arr, renderer) {
-		var elements = [].map.call(arr, renderer);
+		var elements = [].map.call(arr, function(obj) {
+			return obj.node = renderer.apply(null, arguments);
+		});
 
 		if (elements.length > 1) {
 			var docFrag = document.createDocumentFragment();
@@ -81,17 +83,15 @@ ObservableArray.prototype.addDomObserver = (function() {
 		}
 		observableArray.on('splice', handleSplice);
 
-		function handleReverse() {
-			if (parent.childNodes.length > 1) {
-				var docFrag = document.createDocumentFragment();
-				while (parent.lastChild) {
-					var last = parent.removeChild(parent.lastChild);
-					docFrag.appendChild(last);
-				}
-				parent.appendChild(docFrag);
-			}
+		function handleReorder() {
+			var docFrag = document.createDocumentFragment();
+			observableArray.forEach(function(obj){
+				parent.removeChild(obj.node);
+				docFrag.appendChild(obj.node);
+			});
+			parent.appendChild(docFrag);
 		}
-		observableArray.on('reverse', handleReverse);
+		observableArray.on('reverse sort', handleReorder);
 
 		return {
 			stop: function() {
@@ -99,7 +99,7 @@ ObservableArray.prototype.addDomObserver = (function() {
 					.off('unshift push', handleAdd)
 					.off('shift pop', handleRemove)
 					.off('splice', handleSplice)
-					.off('reverse', handleReverse);
+					.off('reverse sort', handleReorder);
 			}
 		}
 	};
