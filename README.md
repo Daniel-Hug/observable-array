@@ -44,7 +44,15 @@ observableArray.off('pop', handlePop);
 
 ### add dom observers (requires [dom-observer.js](dom-observer.js))
 
+To use `addDomObserver` on an observable array, all of its items should be objects (non-primitives).
+This is because a `node` property is added to each one pointing to the node returned by the renderer for that item.
+
 ```js
+// create an observable array of objects
+var nums = new ObservableArray([1,2,3,4,5,6,7,8,9,10,11].map(function(num){
+	return { num: num };
+}));
+
 var ul = document.querySelector('ul');
 
 function itemRenderer(num) {
