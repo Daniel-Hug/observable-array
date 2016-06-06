@@ -38,7 +38,7 @@ ObservableArray.prototype.addDomObserver = (function() {
 		function handleRemove(methodName) {
 			parent.removeChild(parent[methodName === 'pop' ? 'lastChild' : 'firstChild']);
 		}
-		observableArray.on('shift pop', handleAdd);
+		observableArray.on('shift pop', handleRemove);
 
 		// render DOM changes to match the call to splice
 		function handleSplice(methodName, start, deleteCount) {
