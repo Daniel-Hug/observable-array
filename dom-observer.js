@@ -1,6 +1,6 @@
 ObservableArray.prototype.addDomObserver = (function() {
 
-	var nodeMap = new WeakMap();
+	var nodeMap = new Map();
 
 	// renderer will be called for each item in arr, and should return a DOM node.
 	// renderAll returns a single node containing the rendered nodes
