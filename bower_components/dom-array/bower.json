@@ -1,0 +1,20 @@
+{
+  "name": "dom-array",
+  "main": "dom-array.js",
+  "homepage": "https://github.com/Daniel-Hug/dom-array",
+  "authors": [
+    "Daniel Hug <daniel@hugwebdesign.com>"
+  ],
+  "description": "A JS module: Manipulate the DOM like an array",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
