@@ -19,7 +19,7 @@ observableArray.splice(2);
 ```
 
 
-### observe changes (uses method sniffing)
+### observe changes
 
 The following methods for observing the arrays (`.on()` and `.off()`) come from [subscribable.js](https://github.com/Daniel-Hug/subscribable.js) (a dependency of observable-array.js):
 
@@ -42,28 +42,29 @@ observableArray.off('pop', handlePop);
 ```
 
 
-### add dom observers (requires [dom-observer.js](dom-observer.js))
+### add dom observers with [DOM Array](https://github.com/Daniel-Hug/dom-array)
 
-To use `addDomObserver` on an observable array, all of its items should be objects (non-primitives).
-This is because a `node` property is added to each one pointing to the node returned by the renderer for that item.
+DOM Array will subscribe to the following events and automatically update a list of elements to match the new state of the array:
+  - `shift`
+  - `pop`
+  - `unshift`
+  - `push`
+  - `splice`
+  - `reverse`
+  - `sort` (requires [Map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) support)
 
 ```js
-// create an observable array of objects
-var nums = new ObservableArray([1,2,3,4,5,6,7,8,9,10,11].map(function(num){
-	return { num: num };
-}));
+// create an observable array
+var nums = new ObservableArray([1, 2, 3]);
 
+// set up DOM Array passing observable array
 var ul = document.querySelector('ul');
-
-function itemRenderer(num) {
+var listView = new DomArray(nums, ul, function renderItem(num) {
 	var li = document.createElement('li');
 	li.textContent = 'number: ' + num;
 	return li;
-}
+});
 
-// add DOM observer:
-var domObserver = observableArray.addDomObserver(ul, itemRenderer);
-
-// unsubscribe DOM observer:
-domObserver.stop();
+// add 2 items
+nums.push(4, 5);
 ```
