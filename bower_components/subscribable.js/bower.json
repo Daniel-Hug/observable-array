@@ -1,7 +1,6 @@
 {
   "name": "subscribable.js",
   "main": "subscribable.js",
-  "version": "2.1.0",
   "authors": [
     "Daniel Hug <danielthehug@gmail.com>"
   ],

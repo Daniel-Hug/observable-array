@@ -54,8 +54,12 @@ DOM Array will then automatically update the list of elements to match the new s
 // create an observable array
 var nums = new ObservableArray([1, 2, 3]);
 
-var listView = new DomArray(nums, $('ul')[0], function(num) {
-    return $('&lt;li>').text('number: ' + num);
+// set up DOM Array passing observable array
+var ul = document.querySelector('ul');
+var listView = new DomArray(nums, ul, function renderItem(num) {
+	var li = document.createElement('li');
+	li.textContent = 'number: ' + num;
+	return li;
 });
 
 // add 2 items

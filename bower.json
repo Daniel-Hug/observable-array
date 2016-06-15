@@ -17,6 +17,6 @@
   ],
   "dependencies": {
     "subscribable.js": "2.x",
-    "dom-array": "^0.0.1"
+    "dom-array": "0.x"
   }
 }
